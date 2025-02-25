@@ -6,6 +6,7 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
   const [playerName, setPlayerName] = useState('');
   const [player1, setPlayer1] = useState('');
   const [player2, setPlayer2] = useState('');
+  const [pool, setPool] = useState('A');
   const [matchTeam1, setMatchTeam1] = useState('');
   const [matchTeam2, setMatchTeam2] = useState('');
   const [score1, setScore1] = useState('');
@@ -30,12 +31,12 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
     if (player1 && player2 && player1 !== player2) {
       try {
         const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-        const res = await axios.post(`${baseUrl}/api/teams`, { player1, player2 }, { headers: { 'x-user': 'admin' } });
+        const res = await axios.post(`${baseUrl}/api/teams`, { player1, player2, pool }, { headers: { 'x-user': 'admin' } });
         setTeams([...teams, res.data]);
         fetchData();
         alert('Team formed');
       } catch (err) {
-        alert('Invalid team selection or max teams reached');
+        alert('Invalid team selection or pool full');
       }
     }
   };
@@ -50,6 +51,21 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
       setScore1('');
       setScore2('');
       alert('Score entered');
+    }
+  };
+
+  const purgeData = async () => {
+    if (window.confirm('Are you sure you want to purge all data? This cannot be undone.')) {
+      try {
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        await axios.delete(`${baseUrl}/api/purge`, { headers: { 'x-user': 'admin' } });
+        setPlayers([]);
+        setTeams([]);
+        setMatches([]);
+        alert('All data purged successfully');
+      } catch (err) {
+        alert('Error purging data');
+      }
     }
   };
 
@@ -86,7 +102,7 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
           {/* Form Team */}
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-pastel-darkGray mb-4">Form Team</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <select
                 value={player1}
                 onChange={e => setPlayer1(e.target.value)}
@@ -102,6 +118,14 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
               >
                 <option value="">Select Player 2</option>
                 {players.map(p => <option key={p._id} value={p.name}>{p.name}</option>)}
+              </select>
+              <select
+                value={pool}
+                onChange={e => setPool(e.target.value)}
+                className="px-4 py-2 border border-pastel-gray rounded-md focus:outline-none focus:ring-2 focus:ring-pastel-blue"
+              >
+                <option value="A">Pool A</option>
+                <option value="B">Pool B</option>
               </select>
               <button
                 onClick={formTeam}
@@ -174,6 +198,12 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
               className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green hover:text-white transition duration-200"
             >
               View Current Match
+            </button>
+            <button
+              onClick={purgeData}
+              className="bg-pastel-pink text-white px-4 py-2 rounded-md hover:bg-pastel-purple transition duration-200"
+            >
+              Purge All Data
             </button>
           </div>
         </div>
