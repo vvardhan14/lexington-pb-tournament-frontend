@@ -33,15 +33,24 @@ router.get('/teams', async (req, res) => {
 
 router.post('/teams', isAdmin, async (req, res) => {
   const { player1, player2, pool } = req.body;
-  if (!player1 || !player2 || player1 === player2) return res.status(400).json({ message: 'Invalid players' });
+  if (!player1 || !player2 || player1 === player2) return res.status(400).json({ message: 'Invalid players: Players must be different' });
   if (!['A', 'B'].includes(pool)) return res.status(400).json({ message: 'Pool must be A or B' });
+
   const teams = await Team.find();
   if (teams.length >= 12) return res.status(400).json({ message: 'Max teams reached' });
+
+  // Check for duplicate team (same players, regardless of order)
+  const teamExists = teams.some(t => 
+    (t.players.includes(player1) && t.players.includes(player2))
+  );
+  if (teamExists) return res.status(400).json({ message: 'This team combination already exists' });
+
   const teamsInPool = teams.filter(t => t.pool === pool).length;
   if (teamsInPool >= 6) return res.status(400).json({ message: `Pool ${pool} already has 6 teams` });
+
   const team = new Team({ players: [player1, player2], pool });
   await team.save();
-  if (teams.length === 11) generateDraws();
+  if (teams.length === 11) generateDraws(); // Triggered when 12th team is added
   res.status(201).json(team);
 });
 
@@ -61,7 +70,6 @@ router.post('/matches/score', isAdmin, async (req, res) => {
   res.json(match);
 });
 
-// New Purge Endpoint
 router.delete('/purge', isAdmin, async (req, res) => {
   try {
     await Player.deleteMany({});
