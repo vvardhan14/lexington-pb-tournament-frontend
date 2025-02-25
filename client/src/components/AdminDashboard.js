@@ -59,7 +59,7 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-pastel-darkGray">Admin Dashboard</h1>
-            <button onClick={logout} className="bg-pastel-pink text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-purple hover:text-white transition duration-200">
+            <button onClick={logout} className="bg-pastel-pink text-white px-4 py-2 rounded-md hover:bg-pastel-purple transition duration-200">
               Logout
             </button>
           </div>
@@ -76,7 +76,7 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
               />
               <button
                 onClick={addPlayer}
-                className="bg-pastel-green text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-yellow hover:text-pastel-darkGray transition duration-200"
+                className="bg-pastel-green text-white px-4 py-2 rounded-md hover:bg-pastel-yellow hover:text-pastel-darkGray transition duration-200"
               >
                 Add Player
               </button>
@@ -105,7 +105,7 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
               </select>
               <button
                 onClick={formTeam}
-                className="bg-pastel-blue text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-purple hover:text-white transition duration-200"
+                className="bg-pastel-blue text-white px-4 py-2 rounded-md hover:bg-pastel-purple transition duration-200"
               >
                 Form Team
               </button>
@@ -149,7 +149,7 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
             </div>
             <button
               onClick={enterScore}
-              className="mt-4 bg-pastel-purple text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-pink hover:text-white transition duration-200"
+              className="mt-4 bg-pastel-purple text-white px-4 py-2 rounded-md hover:bg-pastel-pink transition duration-200"
             >
               Enter Score
             </button>
@@ -159,19 +159,19 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
           <div className="flex space-x-4">
             <button
               onClick={() => navigate('/standings')}
-              className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green transition duration-200"
+              className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green hover:text-white transition duration-200"
             >
               View Standings
             </button>
             <button
               onClick={() => navigate('/draws')}
-              className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green transition duration-200"
+              className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green hover:text-white transition duration-200"
             >
               View Draws
             </button>
             <button
               onClick={() => navigate('/current-match')}
-              className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green transition duration-200"
+              className="bg-pastel-yellow text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-green hover:text-white transition duration-200"
             >
               View Current Match
             </button>

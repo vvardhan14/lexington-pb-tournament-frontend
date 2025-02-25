@@ -14,7 +14,7 @@ function Standings({ poolA, poolB, teams }) {
             <h1 className="text-2xl font-bold text-pastel-darkGray">Pool Standings</h1>
             <button
               onClick={() => navigate(-1)}
-              className="bg-pastel-pink text-pastel-darkGray px-4 py-2 rounded-md hover:bg-pastel-purple hover:text-white transition duration-200"
+              className="bg-pastel-pink text-white px-4 py-2 rounded-md hover:bg-pastel-purple transition duration-200"
             >
               Back
             </button>

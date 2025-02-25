@@ -33,7 +33,7 @@ function Login({ login }) {
           />
           <button
             onClick={handleLogin}
-            className="w-full bg-pastel-blue text-pastel-darkGray py-2 rounded-md hover:bg-pastel-purple hover:text-white transition duration-200"
+            className="w-full bg-pastel-blue text-white py-2 rounded-md hover:bg-pastel-purple transition duration-200"
           >
             Login
           </button>
