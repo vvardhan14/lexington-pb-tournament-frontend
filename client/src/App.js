@@ -34,7 +34,7 @@ function App() {
   const poolB = teams.slice(6, 12);
 
   const login = (username, password) => {
-    if (username === 'admin' && password === 'admin123') {
+    if (username === 'admin' && password === 'modi123') {
       setCurrentUser('admin');
     } else if (players.some(p => p.name === username && password === 'player123')) {
       setCurrentUser(username);
