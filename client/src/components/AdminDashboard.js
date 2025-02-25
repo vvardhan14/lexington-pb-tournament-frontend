@@ -15,7 +15,8 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
   const addPlayer = async () => {
     if (playerName) {
       try {
-        const res = await axios.post('http://localhost:5000/api/players', { name: playerName }, { headers: { 'x-user': 'admin' } });
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        const res = await axios.post(`${baseUrl}/api/players`, { name: playerName }, { headers: { 'x-user': 'admin' } });
         setPlayers([...players, res.data]);
         setPlayerName('');
         alert('Player added');
@@ -28,9 +29,10 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
   const formTeam = async () => {
     if (player1 && player2 && player1 !== player2) {
       try {
-        const res = await axios.post('http://localhost:5000/api/teams', { player1, player2 }, { headers: { 'x-user': 'admin' } });
+        const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        const res = await axios.post(`${baseUrl}/api/teams`, { player1, player2 }, { headers: { 'x-user': 'admin' } });
         setTeams([...teams, res.data]);
-        fetchData(); // Refresh matches if draws are generated
+        fetchData();
         alert('Team formed');
       } catch (err) {
         alert('Invalid team selection or max teams reached');
@@ -42,7 +44,8 @@ function AdminDashboard({ logout, players, setPlayers, teams, setTeams, matches,
     const team1Idx = parseInt(matchTeam1);
     const team2Idx = parseInt(matchTeam2);
     if (score1 >= 0 && score2 >= 0) {
-      await axios.post('http://localhost:5000/api/matches/score', { team1Idx, team2Idx, score1: parseInt(score1), score2: parseInt(score2) }, { headers: { 'x-user': 'admin' } });
+      const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      await axios.post(`${baseUrl}/api/matches/score`, { team1Idx, team2Idx, score1: parseInt(score1), score2: parseInt(score2) }, { headers: { 'x-user': 'admin' } });
       fetchData();
       setScore1('');
       setScore2('');

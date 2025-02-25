@@ -19,10 +19,11 @@ function App() {
   }, []);
 
   const fetchData = async () => {
+    const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const [playersRes, teamsRes, matchesRes] = await Promise.all([
-      axios.get('http://localhost:5000/api/players'),
-      axios.get('http://localhost:5000/api/teams'),
-      axios.get('http://localhost:5000/api/matches'),
+      axios.get(`${baseUrl}/api/players`),
+      axios.get(`${baseUrl}/api/teams`),
+      axios.get(`${baseUrl}/api/matches`),
     ]);
     setPlayers(playersRes.data);
     setTeams(teamsRes.data);
