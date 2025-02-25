@@ -32,11 +32,14 @@ router.get('/teams', async (req, res) => {
 });
 
 router.post('/teams', isAdmin, async (req, res) => {
-  const { player1, player2 } = req.body;
+  const { player1, player2, pool } = req.body;
   if (!player1 || !player2 || player1 === player2) return res.status(400).json({ message: 'Invalid players' });
+  if (!['A', 'B'].includes(pool)) return res.status(400).json({ message: 'Pool must be A or B' });
   const teams = await Team.find();
   if (teams.length >= 12) return res.status(400).json({ message: 'Max teams reached' });
-  const team = new Team({ players: [player1, player2] });
+  const teamsInPool = teams.filter(t => t.pool === pool).length;
+  if (teamsInPool >= 6) return res.status(400).json({ message: `Pool ${pool} already has 6 teams` });
+  const team = new Team({ players: [player1, player2], pool });
   await team.save();
   if (teams.length === 11) generateDraws();
   res.status(201).json(team);
@@ -58,12 +61,25 @@ router.post('/matches/score', isAdmin, async (req, res) => {
   res.json(match);
 });
 
+// New Purge Endpoint
+router.delete('/purge', isAdmin, async (req, res) => {
+  try {
+    await Player.deleteMany({});
+    await Team.deleteMany({});
+    await Match.deleteMany({});
+    res.status(200).json({ message: 'All data purged successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error purging data', error: err.message });
+  }
+});
+
 async function generateDraws() {
   const teams = await Team.find();
   if (teams.length !== 12) return;
+  const poolA = teams.filter(t => t.pool === 'A');
+  const poolB = teams.filter(t => t.pool === 'B');
+  if (poolA.length !== 6 || poolB.length !== 6) return;
   await Match.deleteMany({});
-  const poolA = teams.slice(0, 6);
-  const poolB = teams.slice(6, 12);
   const matches = [
     ...generatePoolMatches(poolA, 'A'),
     ...generatePoolMatches(poolB, 'B'),
