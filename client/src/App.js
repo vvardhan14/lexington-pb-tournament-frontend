@@ -37,7 +37,7 @@ function App() {
   const poolB = teams.filter(t => t.pool === 'B');
 
   const login = (username, password) => {
-    if (username === 'admin' && password === 'admin123') {
+    if (username === 'admin' && password === 'trump123') {
       setCurrentUser('admin');
     } else if (players.some(p => p.name === username && password === 'player123')) {
       setCurrentUser(username);
