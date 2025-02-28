@@ -6,7 +6,6 @@ import AdminDashboard from './components/AdminDashboard';
 import PlayerProfile from './components/PlayerProfile';
 import Standings from './components/Standings';
 import Draws from './components/Draws';
-import CurrentMatch from './components/CurrentMatch';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -20,21 +19,25 @@ function App() {
 
   const fetchData = async () => {
     const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-    const [playersRes, teamsRes, matchesRes] = await Promise.all([
-      axios.get(`${baseUrl}/api/players`),
-      axios.get(`${baseUrl}/api/teams`),
-      axios.get(`${baseUrl}/api/matches`),
-    ]);
-    setPlayers(playersRes.data);
-    setTeams(teamsRes.data);
-    setMatches(matchesRes.data);
+    try {
+      const [playersRes, teamsRes, matchesRes] = await Promise.all([
+        axios.get(`${baseUrl}/api/players`),
+        axios.get(`${baseUrl}/api/teams`),
+        axios.get(`${baseUrl}/api/matches`),
+      ]);
+      setPlayers(playersRes.data);
+      setTeams(teamsRes.data);
+      setMatches(matchesRes.data);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+    }
   };
 
-  const poolA = teams.slice(0, 6);
-  const poolB = teams.slice(6, 12);
+  const poolA = teams.filter(t => t.pool === 'A');
+  const poolB = teams.filter(t => t.pool === 'B');
 
   const login = (username, password) => {
-    if (username === 'admin' && password === 'modi123') {
+    if (username === 'admin' && password === 'admin123') {
       setCurrentUser('admin');
     } else if (players.some(p => p.name === username && password === 'player123')) {
       setCurrentUser(username);
@@ -53,7 +56,6 @@ function App() {
         <Route path="/profile" element={currentUser && currentUser !== 'admin' ? <PlayerProfile logout={logout} currentUser={currentUser} /> : <Navigate to="/" />} />
         <Route path="/standings" element={currentUser ? <Standings poolA={poolA} poolB={poolB} teams={teams} /> : <Navigate to="/" />} />
         <Route path="/draws" element={currentUser ? <Draws matches={matches} teams={teams} /> : <Navigate to="/" />} />
-        <Route path="/current-match" element={currentUser ? <CurrentMatch matches={matches} teams={teams} /> : <Navigate to="/" />} />
       </Routes>
     </Router>
   );
